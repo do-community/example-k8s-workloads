@@ -1,11 +1,17 @@
 package main
 
+//to do
+// error handling(?)
+// break out Users to another file
+
 import (
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/mux"
 )
 
 const (
@@ -68,33 +74,80 @@ func writeJSONResponse(w http.ResponseWriter, v interface{}) {
 	json.NewEncoder(w).Encode(v)
 }
 
+func writeJSONError(w http.ResponseWriter, code int) {
+	msg := map[string]string{
+		"error": http.StatusText(code),
+	}
+	w.WriteHeader(code)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(msg)
+}
+
+func returnAllUserData(w http.ResponseWriter, req *http.Request) {
+	w.WriteHeader(200)
+	writeJSONResponse(w, users)
+}
+
+// find single user data
+// return single user data(?)
+func returnSingleUserData(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	username := vars["username"]
+	var returnValue = ""
+
+	for _, user := range users {
+		if username == user.UserName {
+			returnValue = user.UserName
+		}
+	}
+	if returnValue != "" {
+		writeJSONResponse(w, returnValue)
+	} else {
+		writeJSONError(w, 404)
+	}
+}
+
+func returnLatestComment(w http.ResponseWriter, req *http.Request) {
+	w.WriteHeader(200)
+	for _, user := range users {
+		//return as json
+		w.Write([]byte(fmt.Sprintf(user.FirstName + "'s Most recent comment: " + user.MostRecentComment + "\n")))
+	}
+}
+
+func healthCheck(w http.ResponseWriter, req *http.Request) {
+	w.WriteHeader(200)
+	w.Write([]byte("OK"))
+}
+
+func notFound(w http.ResponseWriter, r *http.Request) {
+	writeJSONError(w, http.StatusNotFound)
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
 
-	mux := http.NewServeMux()
+	mux := mux.NewRouter()
 
-	showAllUserDataHandler := http.HandlerFunc(showAllUserData)
-	mux.Handle("/", showAllUserDataHandler)
+	returnAllUserDataHandler := http.HandlerFunc(returnAllUserData)
+	mux.Handle("/users", returnAllUserDataHandler)
 
-	showLatestCommentHandler := http.HandlerFunc(showLatestComment)
-	mux.Handle("/comments", showLatestCommentHandler)
+	returnSingleUserDataHandler := http.HandlerFunc(returnSingleUserData)
+	// I think I need "/user/{username}" but can't get that to work
+	mux.Handle("/user/{username}", returnSingleUserDataHandler)
+
+	returnLatestCommentHandler := http.HandlerFunc(returnLatestComment)
+	mux.Handle("/comments", returnLatestCommentHandler)
+
+	healthCheckHandler := http.HandlerFunc(healthCheck)
+	mux.Handle("/health", healthCheckHandler)
+
+	notFoundHandler := http.HandlerFunc(notFound)
+	mux.Handle("/", notFoundHandler)
 
 	log.Printf("Listening on port %s", port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))
-}
-
-func showAllUserData(w http.ResponseWriter, req *http.Request) {
-	w.WriteHeader(200)
-	writeJSONResponse(w, users)
-
-}
-
-func showLatestComment(w http.ResponseWriter, req *http.Request) {
-	w.WriteHeader(200)
-	for _, user := range users {
-		w.Write([]byte(fmt.Sprintf(user.FirstName + "'s Most recent comment: " + user.MostRecentComment + "\n")))
-	}
 }
