@@ -1,16 +1,21 @@
 package main
 
 //to do
-// error handling(?)
 // break out Users to another file
+// make mostrecentcomment return json
+// user/{username} in another branch
+// license
+// readme
 
 import (
 	"encoding/json"
 	"fmt"
+	"github/example-k8s-workloads/api/data"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/do-community/example-k8s-workloads/api/data"
 	"github.com/gorilla/mux"
 )
 
@@ -18,18 +23,7 @@ const (
 	defaultPort = "4000"
 )
 
-type User struct {
-	Id                int    `json:"id"`
-	UserName          string `json:"user_name"`
-	FirstName         string `json:"first_name"`
-	LastName          string `json:"last_name"`
-	AvatarURL         string `json:"avatar_url"`
-	Company           string `json:"company"`
-	MostRecentComment string `json:"most_recent_comment"`
-	LastLogin         string `json:"last_login"`
-}
-
-var users = []User{
+	users := data.User{
 	{Id: 654651651,
 		UserName:          "kimschles",
 		FirstName:         "Kim",
@@ -136,7 +130,6 @@ func main() {
 	mux.Handle("/users", returnAllUserDataHandler)
 
 	returnSingleUserDataHandler := http.HandlerFunc(returnSingleUserData)
-	// I think I need "/user/{username}" but can't get that to work
 	mux.Handle("/user/{username}", returnSingleUserDataHandler)
 
 	returnLatestCommentHandler := http.HandlerFunc(returnLatestComment)
