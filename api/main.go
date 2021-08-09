@@ -1,21 +1,12 @@
 package main
 
-//to do
-// break out Users to another file
-// make mostrecentcomment return json
-// user/{username} in another branch
-// license
-// readme
-
 import (
 	"encoding/json"
 	"fmt"
-	"github/example-k8s-workloads/api/data"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/do-community/example-k8s-workloads/api/data"
 	"github.com/gorilla/mux"
 )
 
@@ -23,7 +14,18 @@ const (
 	defaultPort = "4000"
 )
 
-	users := data.User{
+type User struct {
+	Id                int    `json:"id"`
+	UserName          string `json:"user_name"`
+	FirstName         string `json:"first_name"`
+	LastName          string `json:"last_name"`
+	AvatarURL         string `json:"avatar_url"`
+	Company           string `json:"company"`
+	MostRecentComment string `json:"most_recent_comment"`
+	LastLogin         string `json:"last_login"`
+}
+
+var users = []User{
 	{Id: 654651651,
 		UserName:          "kimschles",
 		FirstName:         "Kim",
@@ -82,8 +84,6 @@ func returnAllUserData(w http.ResponseWriter, req *http.Request) {
 	writeJSONResponse(w, users)
 }
 
-// find single user data
-// return single user data(?)
 func returnSingleUserData(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	username := vars["username"]
@@ -104,10 +104,25 @@ func returnSingleUserData(w http.ResponseWriter, req *http.Request) {
 func returnLatestComment(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(200)
 	for _, user := range users {
-		//return as json
 		w.Write([]byte(fmt.Sprintf(user.FirstName + "'s Most recent comment: " + user.MostRecentComment + "\n")))
 	}
 }
+
+//First draft of rewrite of returnLatestComment
+
+// type Comments struct {
+// 	UserName string `json:"user_name"`
+//	MostRecentComment string `json: "most_recent_comment"`
+// }
+
+// func returnLatestComment(w http.ResponseWriter, req *http.Request) {
+// var recentComments = []Comments{}
+// 	 for i, user := range users {
+// recentComments = append(recentComments[i].userName = user.UserName)
+// 	 }
+// 	w.WriteHeader(200)
+// 	writeJSONResponse(w, recentComments)
+// }
 
 func healthCheck(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(200)
