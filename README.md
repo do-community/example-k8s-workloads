@@ -1,56 +1,34 @@
-# Go REST API Example
-A lightweight example API written in go. Orginally designed to help people practice deploying an API to a Kubernetes cluster. 
+# Example Kubernetes Workloads 
 
-Note:  that the playbooks in this repository are for demonstration and learning. They are not intended for production setups.
+Welcome! 
+
+This repo is a work in progress, but it will eventually contain 3 different example applications that you can deploy to a Kubernetes cluster. 
+
+Please note that these applications were created for educational purposes and are not suited for long-running production settings. 
+
+## Symbols 
+These emojis have meaning in this repo: 
+
+✅ (:check_mark_button:) means that the section and code sample are complete 
+🚧 (:construction:) means that this section and the code are incomplete 
 
 
-## Installation & Run
-```bash
-# Download this project
-go get https://github.com/do-community/example-k8s-workloads/
-```
+## Examples 
+These are the workloads and the kind of Kubernetes resource that serves them best: 
 
-```bash
-# Build and Run
-cd api
-go mod init 
-go run main.go
+1. ✅ An example API written in Go that is deployed as a Kubernetes Deployment
+1. 🚧 A log aggregator that is deployed as a Kubernetes DaemonSet
+1. 🚧 A cronjob that is deployed as a Kubernetes Job 
 
-# API Endpoint : http://127.0.0.1:4000
-```
 
-## Structure
-```
-├── app
-│   ├── app.go
-│   ├── handler          // Our API core handlers
-│   │   ├── common.go    // Common response functions
-│   │   ├── projects.go  // APIs for Project model
-│   │   └── tasks.go     // APIs for Task model
-│   └── model
-│       └── model.go     // Models for our application
-├── config
-│   └── config.go        // Configuration
-└── main.go
-```
+## Follow Along 
+If you'd like to watch a talk that uses the example-api, check out the video [How to Deploy Your Application or Microservice on Kubernetes](https://www.digitalocean.com/community/tech_talks/how-to-deploy-your-application-or-microservice-as-a-kubernetes-deployment). 
 
-## API
+If you'd like to see the log aggreator and cron job in action, see the video [Deploying Microservices as Kubernetes DaemonSets and Jobs](https://www.digitalocean.com/community/tech_talks/deploying-microservices-as-kubernetes-daemonsets-and-jobs)
 
-#### /users
-* `GET` : Get all users
-
-#### /user/{#username}
-* `GET` : Get a specific user based on their username 
-
-#### /comments 
-* `GET` : Get each user's latest comment 
-
-#### /health
-* `GET` : Get the healthcheck endpoint, `OK` 
 
 ## Todo
+- [ ] 
+- [ ]
+- [ ]
 
-- [ ] Organize the code with packages
-- [ ] Write documentation on how to find and use 
-- [ ] Write the tests for all endpoints.
-- [ ] Build a deployment process to push Docker image to a container registry 

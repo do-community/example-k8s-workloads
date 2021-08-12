@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -12,6 +13,11 @@ import (
 
 const (
 	defaultPort = "4000"
+)
+
+var (
+	//go:embed users.json
+	b []byte
 )
 
 type User struct {
@@ -80,49 +86,37 @@ func writeJSONError(w http.ResponseWriter, code int) {
 }
 
 func returnAllUserData(w http.ResponseWriter, req *http.Request) {
-	w.WriteHeader(200)
 	writeJSONResponse(w, users)
 }
 
 func returnSingleUserData(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	username := vars["username"]
-	var returnValue = ""
 
 	for _, user := range users {
 		if username == user.UserName {
-			returnValue = user.UserName
+			writeJSONResponse(w, &user)
+			return
 		}
 	}
-	if returnValue != "" {
-		writeJSONResponse(w, returnValue)
-	} else {
-		writeJSONError(w, 404)
-	}
+	writeJSONError(w, 404)
+}
+
+type Comments struct {
+	UserName          string `json:"user_name"`
+	MostRecentComment string `json: "most_recent_comment"`
 }
 
 func returnLatestComment(w http.ResponseWriter, req *http.Request) {
-	w.WriteHeader(200)
+	var recentComments []Comments
 	for _, user := range users {
-		w.Write([]byte(fmt.Sprintf(user.FirstName + "'s Most recent comment: " + user.MostRecentComment + "\n")))
+		recentComments = append(recentComments, Comments{
+			UserName:          user.UserName,
+			MostRecentComment: user.MostRecentComment,
+		})
 	}
+	writeJSONResponse(w, recentComments)
 }
-
-//First draft of rewrite of returnLatestComment
-
-// type Comments struct {
-// 	UserName string `json:"user_name"`
-//	MostRecentComment string `json: "most_recent_comment"`
-// }
-
-// func returnLatestComment(w http.ResponseWriter, req *http.Request) {
-// var recentComments = []Comments{}
-// 	 for i, user := range users {
-// recentComments = append(recentComments[i].userName = user.UserName)
-// 	 }
-// 	w.WriteHeader(200)
-// 	writeJSONResponse(w, recentComments)
-// }
 
 func healthCheck(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(200)
@@ -134,6 +128,8 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	fmt.Printf("%T", b)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -158,4 +154,5 @@ func main() {
 
 	log.Printf("Listening on port %s", port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))
+
 }

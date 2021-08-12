@@ -1,7 +1,0 @@
-Things to fix:
-
-1. returnSingleUserData function should return a json object of a single user's data, not just their username 
-
-2. returnLatestComment should return a map of json objects showing the user's username and their last comment
- 
-3. Break out the User struct and sample data into a separate package 
