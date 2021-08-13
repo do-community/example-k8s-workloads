@@ -3,7 +3,6 @@ package main
 import (
 	_ "embed"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -16,8 +15,8 @@ const (
 )
 
 var (
-	//go:embed users.json
-	b []byte
+	//go:embed users/users.json
+	data []byte
 )
 
 type User struct {
@@ -31,44 +30,7 @@ type User struct {
 	LastLogin         string `json:"last_login"`
 }
 
-var users = []User{
-	{Id: 654651651,
-		UserName:          "kimschles",
-		FirstName:         "Kim",
-		LastName:          "Schlesinger",
-		AvatarURL:         "https://community-cdn-digitalocean-com.global.ssl.fastly.net/variants/a79PCNZWVqKWL4pZZytLEXmW/1b33f0ae5d4693bf57c52014e04c03ab70f276df2ccd0b8ddde11732686ee1a9",
-		Company:           "Digital Ocean",
-		MostRecentComment: "Hey, I'm giving a tech talk on July 28, 2021. Join me!",
-		LastLogin:         "Tue, 27 Jul 2021 21:39:08 +0000",
-	},
-	{Id: 654651652,
-		UserName:          "masonegger",
-		FirstName:         "Mason",
-		LastName:          "Egger",
-		AvatarURL:         "https://community-cdn-digitalocean-com.global.ssl.fastly.net/variants/EXJi5mGhdvFYbTxQ8Sfkdwfd/1b33f0ae5d4693bf57c52014e04c03ab70f276df2ccd0b8ddde11732686ee1a9",
-		Company:           "Digital Ocean",
-		MostRecentComment: "Python!",
-		LastLogin:         "Mon, 24 May 2021 21:39:08 +0000",
-	},
-	{Id: 654651653,
-		UserName:          "chrisoncode",
-		FirstName:         "Chris",
-		LastName:          "Sev",
-		AvatarURL:         "https://community-cdn-digitalocean-com.global.ssl.fastly.net/variants/FvZ5kCncEfUQXbUkiSrNyJrW/1b33f0ae5d4693bf57c52014e04c03ab70f276df2ccd0b8ddde11732686ee1a9",
-		Company:           "Digital Ocean",
-		MostRecentComment: "JavaScript!",
-		LastLogin:         "Sun, 25 Jul 2021 16:33:08 +0000",
-	},
-	{Id: 654651654,
-		UserName:          "mattipv4",
-		FirstName:         "Matt",
-		LastName:          "Cowley",
-		AvatarURL:         "https://community-cdn-digitalocean-com.global.ssl.fastly.net/variants/KyhncqSAFFeF3ULjGDX3MgC7/1b33f0ae5d4693bf57c52014e04c03ab70f276df2ccd0b8ddde11732686ee1a9",
-		Company:           "Digital Ocean & CloudFlare",
-		MostRecentComment: "Rails, CDNs, Community!",
-		LastLogin:         "Wed, 28 Jul 2021 10:05:29 +0000",
-	},
-}
+var users []User
 
 func writeJSONResponse(w http.ResponseWriter, v interface{}) {
 	w.Header().Set("Content-Type", "application/json")
@@ -128,7 +90,11 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	fmt.Printf("%T", b)
+
+	err := json.Unmarshal([]byte(data), &users)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -136,21 +102,22 @@ func main() {
 	}
 
 	mux := mux.NewRouter()
+	subrouter := mux.PathPrefix("/api/v1").Subrouter()
 
 	returnAllUserDataHandler := http.HandlerFunc(returnAllUserData)
-	mux.Handle("/users", returnAllUserDataHandler)
+	subrouter.Handle("/users", returnAllUserDataHandler)
 
 	returnSingleUserDataHandler := http.HandlerFunc(returnSingleUserData)
-	mux.Handle("/user/{username}", returnSingleUserDataHandler)
+	subrouter.Handle("/user/{username}", returnSingleUserDataHandler)
 
 	returnLatestCommentHandler := http.HandlerFunc(returnLatestComment)
-	mux.Handle("/comments", returnLatestCommentHandler)
+	subrouter.Handle("/comments", returnLatestCommentHandler)
 
 	healthCheckHandler := http.HandlerFunc(healthCheck)
-	mux.Handle("/health", healthCheckHandler)
+	subrouter.Handle("/health", healthCheckHandler)
 
 	notFoundHandler := http.HandlerFunc(notFound)
-	mux.Handle("/", notFoundHandler)
+	subrouter.Handle("/", notFoundHandler)
 
 	log.Printf("Listening on port %s", port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))

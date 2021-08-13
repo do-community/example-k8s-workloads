@@ -21,22 +21,22 @@ go run main.go
 ├── api
 |   └── vendor
 │   └── users
-│       └── users.json     // Models for our application
+│       └── users.json // Sample data for the application
 └── main.go
 ```
 
 ## API
 
-#### /users
+#### api/v1/users
 * `GET` : Get all users
 
-#### /user/{#username}
+#### api/v1/user/{#username}
 * `GET` : Get a specific user with their username 
 
-#### /comments 
+#### api/v1/comments 
 * `GET` : Get each user's latest comment 
 
-#### /health
+#### api/v1/health
 * `GET` : Get the healthcheck endpoint, `OK` 
 
 ## Todo

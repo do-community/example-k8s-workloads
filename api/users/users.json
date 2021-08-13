@@ -1,6 +1,6 @@
 [
     {   
-        "id":                 "654651651",
+        "id":                 654651651,
         "user_name":          "kimschles",
         "first_name":         "Kim",
         "last_name":          "Schlesinger",
@@ -10,7 +10,7 @@
         "last_login":         "Tue, 27 Jul 2021 21:39:08 +0000"
     }, 
     {
-        "id":                 "654651652",
+        "id":                 654651652,
         "user_name":          "masonegger",
         "first_name":         "Mason",
         "last_name":          "Egger",
@@ -37,6 +37,6 @@
         "avatar_url":         "https://community-cdn-digitalocean-com.global.ssl.fastly.net/variants/KyhncqSAFFeF3ULjGDX3MgC7/1b33f0ae5d4693bf57c52014e04c03ab70f276df2ccd0b8ddde11732686ee1a9",
         "company":           "Digital Ocean & CloudFlare",
         "most_recenet_comment": "Rails, CDNs, Community!",
-        "last_login":         "Wed, 28 Jul 2021 10:05:29 +0000",
+        "last_login":         "Wed, 28 Jul 2021 10:05:29 +0000"
     }
 ]
