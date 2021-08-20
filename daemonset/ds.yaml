@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nodename
+spec:
+  selector:
+    matchLabels:
+      name: nodename
+  template:
+    metadata:
+      labels:
+        name: nodename
+    spec:
+      tolerations:
+        # this toleration is to have the daemonset runnable on primary nodes
+        # remove it if your primary nodes can't run pods
+        # - effect: NoSchedule
+        #   key: node-role.kubernetes.io/master
+      containers:
+        - name: show-nodename-daemon
+          image: k8s.gcr.io/busybox
+          command: [ "sh", "-c"]
+          args:
+          - while true; do
+              echo "this daemon is running on node $NODE_NAME";
+              echo -en '\n';
+              echo "here's a cat =^..^=";
+              sleep 100;
+            done;
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName 
+      restartPolicy: Always

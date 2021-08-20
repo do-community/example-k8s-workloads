@@ -1,4 +1,4 @@
-# Go REST API Example
+# Go API Example
 A lightweight example API written in go that was designed to help people practice deploying an API to a Kubernetes cluster. 
 
 ## Installation & Run
