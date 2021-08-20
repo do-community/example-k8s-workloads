@@ -12,12 +12,11 @@ here's a cat =^..^=
 The node name is set as an environment variable and the value is set using the [Kubernetes Downward API](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/#the-downward-api). 
 
 ## Run on a Kubernetes Cluster 
-
-`git clone https://github.com/do-community/example-k8s-workloads/`
-
-`cd daemonset`
-
-`kubectl apply -f ds.yaml`
+```bash
+git clone https://github.com/do-community/example-k8s-workloads/ && \
+cd daemonset && \
+kubectl apply -f ds.yaml \
+```
 
 
 ## See the Logs 
