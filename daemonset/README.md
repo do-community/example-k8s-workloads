@@ -18,6 +18,7 @@ git clone https://github.com/do-community/example-k8s-workloads/ && \
 cd example-k8s-workloads/daemonset
 ```
 Apply the DaemonSet manifest
+
 `kubectl apply -f ds.yaml`
 
 ## See the Logs 
