@@ -11,13 +11,14 @@ here's a cat =^..^=
 
 The node name is set as an environment variable and the value is set using the [Kubernetes Downward API](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/#the-downward-api). 
 
-## Run on a Kubernetes Cluster 
+## Run on a Kubernetes Cluster
+Clone this repository and change into the daemonset directory
 ```bash
 git clone https://github.com/do-community/example-k8s-workloads/ && \
-cd daemonset && \
-kubectl apply -f ds.yaml \
+cd example-k8s-workloads/daemonset
 ```
-
+Apply the DaemonSet manifest
+`kubectl apply -f ds.yaml`
 
 ## See the Logs 
 To see the message, first find all the nodename pods 
