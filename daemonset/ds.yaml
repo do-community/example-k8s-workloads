@@ -26,7 +26,7 @@ spec:
               echo "this daemon is running on node $NODE_NAME";
               echo -en '\n';
               echo "here's a cat =^..^=";
-              sleep 100;
+              sleep 600;
             done;
           env:
             - name: NODE_NAME
