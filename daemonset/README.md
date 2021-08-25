@@ -26,7 +26,7 @@ To see the message, first find all the nodename pods
 
 `kubectl get pods` 
 
-You will see a list of pods that start with the prefix `nodename-` and then have their own unique has. 
+You will see a list of pods that start with the prefix `nodename-` followed by a hash.  
 
 To see the logs for a pod, copy the pod name and run 
 
