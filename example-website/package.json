@@ -1,0 +1,26 @@
+{
+  "name": "example-website",
+  "version": "1.0.0",
+  "description": "a simple website to practice deploying to kubernetes",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/do-community/example-k8s-workloads.git"
+  },
+  "keywords": [
+    "nodejs",
+    "kubernetes"
+  ],
+  "author": "Kim Schlesinger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/do-community/example-k8s-workloads/issues"
+  },
+  "homepage": "https://github.com/do-community/example-k8s-workloads#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
