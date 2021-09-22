@@ -1,9 +1,10 @@
 {
   "name": "example-website",
   "version": "1.0.0",
-  "description": "a simple website to practice deploying to kubernetes",
+  "description": "am example website to practice deploying to kubernetes",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,7 +16,7 @@
     "kubernetes"
   ],
   "author": "Kim Schlesinger",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/do-community/example-k8s-workloads/issues"
   },
